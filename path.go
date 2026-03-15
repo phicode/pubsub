@@ -30,7 +30,7 @@ func ParsePath(p string) Path {
 	elems := strings.Count(p, pathSeparatorString) + 1
 	parsed := make(Path, elems)
 
-	for i := 0; i < elems; i++ {
+	for i := range elems {
 		end := strings.IndexByte(p, pathSeparator)
 		if end == -1 {
 			parsed[i] = p

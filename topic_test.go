@@ -60,7 +60,7 @@ func TestMessageOrder(t *testing.T) {
 	sub := topic.Subscribe()
 	defer sub.Unsubscribe()
 	go func() {
-		for i := 0; i < N; i++ {
+		for i := range N {
 			topic.Publish(i)
 		}
 	}()
@@ -85,7 +85,7 @@ func TestHighWaterMark(t *testing.T) {
 	}
 
 	topic.SetHWM(10)
-	for i := 0; i < 100; i++ {
+	for i := range 100 {
 		topic.Publish(i)
 	}
 
@@ -140,7 +140,7 @@ func benchPublishReceive(b *testing.B, consumers int) {
 	topic := NewTopic[int]()
 	var wg sync.WaitGroup
 	wg.Add(consumers)
-	for j := 0; j < consumers; j++ {
+	for range consumers {
 		sub := topic.Subscribe()
 		go benchConsumer(b, sub, &wg, b.N)
 	}
@@ -159,7 +159,7 @@ func benchConsumer(b *testing.B, sub Subscription[int], wg *sync.WaitGroup, numM
 	defer sub.Unsubscribe()
 	var sum int
 	c := sub.C()
-	for i := 0; i < numMsg; i++ {
+	for range numMsg {
 		sum += <-c
 	}
 	var wsum = (numMsg * (numMsg + 1)) / 2
